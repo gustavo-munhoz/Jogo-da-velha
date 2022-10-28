@@ -2,7 +2,7 @@
 -----REQUISITOS------
 > receber e interpretar clique
 > posicionar a jogada
-> verificar vitória
+> verificar vitória ou empate
 > alternar jogador
 > possibilidade de voltar atrás
 > jogar contra o computador
@@ -10,9 +10,11 @@
 
 const cellElements = document.querySelectorAll("[data-cell]")
 const board = document.querySelector("[data-board]");
+const endingScreen = document.querySelector("[data-ending-screen]");
+const button = document.querySelector("[data-button]");
+
 let isCircleTurn = false;
 let winner;
-
 let moveHistory = []
 
 /*
@@ -52,19 +54,24 @@ const handleGameClick = (cell) => {
 
     // verificar vitoria
     if (checkForWin()) {
-        winner = player;
+        winner = player === 'x' ? 'X' : "O";
+        document.getElementsByTagName("p")[0].innerHTML = `${winner} venceu!`;
+        window.setTimeout(function () {
+            endingScreen.style.display = "flex";
+        }, 200);
+
     }
     // verificar empate
     if (checkForDraw()) {
-        console.log("empate");
+        document.getElementsByTagName("p")[0].innerHTML = "Deu velha!";
+        window.setTimeout(function () {
+            endingScreen.style.display = "flex";
+        }, 200);
     }
     // mudar jogador
     swapPlayer();
 }
 
-for (const cell of cellElements) {
-    cell.addEventListener("click", handleGameClick, {once: true})
-}
 
 const checkForWin = () => {
     let movesX = moveHistory.map(e => e["x"]);
@@ -80,4 +87,16 @@ const checkForWin = () => {
 
 const checkForDraw = () => {
     return moveHistory.length === 9 && !checkForWin();
+}
+
+const handleRestartClick = () => {
+    cellElements.forEach(e => e.classList.remove('x', 'circle'));
+    endingScreen.style.display = "none";
+    moveHistory = [];
+}
+
+button.addEventListener("click", handleRestartClick);
+
+for (const cell of cellElements) {
+    cell.addEventListener("click", handleGameClick);
 }

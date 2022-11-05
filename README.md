@@ -4,7 +4,9 @@ Um projeto de jogo da velha no navegador, feito em JS, HTML e CSS.
 A edição final é constituída de 3 scripts:
 
 > menu, localizado no html
+
 > pvp, dinâmicamente carregado caso o jogador escolha jogar multijogador
+
 > pvc, dinâmicamente carregado caso o jogador escolha jogar contra o computador
 
 Deve-se escolher o modo de jogo na tela inicial.

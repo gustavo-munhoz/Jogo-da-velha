@@ -1,27 +1,16 @@
-/*
------REQUISITOS------
-> receber e interpretar clique
-> posicionar a jogada
-> verificar vitória ou empate
-> alternar jogador
-> possibilidade de voltar atrás
-> jogar contra o computador
- */
+// JOGO DA VELHA
+// Criado por: Gustavo Munhoz Corrêa
 
 const cellElements = document.querySelectorAll("[data-cell]")
 const board = document.querySelector("[data-board]");
+const startingScreen = document.querySelector(".starting-screen");
 const endingScreen = document.querySelector("[data-ending-screen]");
-const button = document.querySelector("[data-button]");
+const returnButton = document.querySelector(".return-button");
 
 let isCircleTurn = false;
 let winner;
 let moveHistory = []
 
-/*
-const choosePlayers = () => {
-    // escolher vs computador nao
-}
-*/
 
 const winningCombinations = [
     ["cell1","cell2", "cell3"],
@@ -34,6 +23,10 @@ const winningCombinations = [
     ["cell3", "cell5", "cell7"]
 ]
 
+startingScreen.style.display = "none";
+board.style.visibility = "visible";
+returnButton.style.visibility = "visible";
+
 const makePlay = (cell, player) => {
     cell.target.classList.add(player);
     moveHistory.push({[player]: cell.target.getAttribute('id')});
@@ -41,10 +34,15 @@ const makePlay = (cell, player) => {
 
 const swapPlayer = () => {
     isCircleTurn = !isCircleTurn;
-
     board.classList.remove('x', 'circle');
-
     board.classList.add(isCircleTurn ? 'circle' : 'x');
+}
+
+const showEndingScreen = (text) => {
+    document.querySelector("#ending-message").textContent = text;
+    window.setTimeout(function () {
+        endingScreen.style.display = "flex";
+    }, 200);
 }
 
 const handleGameClick = (cell) => {
@@ -55,23 +53,16 @@ const handleGameClick = (cell) => {
     // verificar vitoria
     if (checkForWin()) {
         winner = player === 'x' ? 'X' : "O";
-        document.getElementsByTagName("p")[0].innerHTML = `${winner} venceu!`;
-        window.setTimeout(function () {
-            endingScreen.style.display = "flex";
-        }, 200);
+        showEndingScreen(`${winner} venceu!`);
 
     }
     // verificar empate
     if (checkForDraw()) {
-        document.getElementsByTagName("p")[0].innerHTML = "Deu velha!";
-        window.setTimeout(function () {
-            endingScreen.style.display = "flex";
-        }, 200);
+        showEndingScreen("Deu velha!")
     }
     // mudar jogador
     swapPlayer();
 }
-
 
 const checkForWin = () => {
     let movesX = moveHistory.map(e => e["x"]);
@@ -89,14 +80,21 @@ const checkForDraw = () => {
     return moveHistory.length === 9 && !checkForWin();
 }
 
-const handleRestartClick = () => {
-    cellElements.forEach(e => e.classList.remove('x', 'circle'));
-    endingScreen.style.display = "none";
-    moveHistory = [];
+
+const returnLastMove = () => {
+    if (moveHistory.length >= 1) {
+        const cellToClear = Object.values(moveHistory[moveHistory.length - 1])[0];
+        cellElements.forEach(e => {
+            if (e.id === cellToClear) {
+                e.classList.remove('x', 'circle');
+                e.addEventListener("click", handleGameClick, {once: true})
+            }
+        })
+        moveHistory.pop();
+        swapPlayer();
+    }
 }
 
-button.addEventListener("click", handleRestartClick);
-
 for (const cell of cellElements) {
-    cell.addEventListener("click", handleGameClick);
+    cell.addEventListener("click", handleGameClick, {once: true});
 }

@@ -6,6 +6,16 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="starting-screen">
+        <p class="starting-message">Como deseja jogar?</p>
+        <!-- Escolha do modo de jogo, carrega o script do jogo dinâmicamente -->
+        <button class="pvp-button" onclick="startPvpGame()">Multijogador</button>
+        <button class="pvc-button" onclick="startPvcGame()">Contra o computador</button>
+        <div class="credits">Criado por Gustavo Munhoz Corrêa</div>
+    </div>
+    <div class="return-button" onclick="returnLastMove()">
+    </div>
+    <!-- Grid dinâmico, ao mudar a classe muda-se a jogada -->
     <section class="board x" data-board>
         <div class="cell" id="cell1" data-cell></div>
         <div class="cell" id="cell2" data-cell></div>
@@ -19,8 +29,8 @@
     </section>
     <div class="ending-screen" data-ending-screen>
         <p id="ending-message"></p>
-        <button class="restart-button" data-button>Jogar novamente?</button>
+        <button class="restart-button" onclick="window.location.reload()">Jogar novamente?</button>
     </div>
-    <script src="script.js"></script>
+    <script src="menu.js"></script>
 </body>
 </html>
